@@ -24,12 +24,21 @@ class Game
             Console.WriteLine("1. Check Stats");
             Console.WriteLine("2. Proceed to the next room");
             Console.Write("Enter your choice (or press Enter to proceed to the next room anyway): ");
-            string choice = Console.ReadLine();
-
-            if (choice == "1")
+            
+            try
             {
-                player.DisplayStats();
-                continue; // Stay in menu
+                string choice = Console.ReadLine();
+                
+                if (choice == "1")
+                {
+                    player.DisplayStats();
+                    continue; // Stay in menu
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred while getting your choice sorted.");
+                continue;
             }
 
             Room currentRoom = rooms[currentRoomIndex];
@@ -55,9 +64,16 @@ class Game
 
             if (currentRoom.HasHealingItem)
             {
-                int healAmount = new Random().Next(5, 25);
-                Console.WriteLine("You found a health potion! Adding health...");
-                player.Heal(healAmount);
+                try
+                {
+                    int healAmount = random.Next(5, 25);
+                    Console.WriteLine("You found a health potion! Adding health...");
+                    player.Heal(healAmount);
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine("An error occurred with the healing item.");
+                }
             }
 
             Console.WriteLine("Press Enter to move to the next room...");
@@ -77,17 +93,25 @@ class Game
             Console.WriteLine("2. Upper Attack (More Damage dealt, Less Accurate)");
             Console.WriteLine($"Your Health: {player.Health} // Enemy's Health: {enemy.Health}");
             Console.Write("Choose an attack: ");
-            string attackChoice = Console.ReadLine();
+            
+            try
+            {
+                string attackChoice = Console.ReadLine();
 
-            if (attackChoice == "1" || attackChoice == "2")
-            {
-                int playerDamage = attackChoice == "1" ? player.LowerAttack() : player.UpperAttack();
-                enemy.TakeDamage(playerDamage);
-                Console.WriteLine($"You dealt {playerDamage} damage to {enemy.Name}!");
+                if (attackChoice == "1" || attackChoice == "2")
+                {
+                    int playerDamage = attackChoice == "1" ? player.LowerAttack() : player.UpperAttack();
+                    enemy.TakeDamage(playerDamage);
+                    Console.WriteLine($"You dealt {playerDamage} damage to {enemy.Name}!");
+                }
+                else
+                {
+                    Console.WriteLine("Invalid input. You flinched, and the enemy will strike you in return.");
+                }
             }
-            else
+            catch (Exception)
             {
-                Console.WriteLine("Invalid input. You flinched, and the enemy will strike you in return.");
+                Console.WriteLine("An error occurred while choosing the attack.");
             }
 
             if (enemy.Health <= 0) break;
@@ -95,9 +119,16 @@ class Game
             Console.WriteLine("Press Enter to continue...");
             Console.ReadLine();
 
-            int enemyDamage = enemy.Attack();
-            player.TakeDamage(enemyDamage);
-            Console.WriteLine($"{enemy.Name} dealt {enemyDamage} damage to you!");
+            try
+            {
+                int enemyDamage = enemy.Attack();
+                player.TakeDamage(enemyDamage);
+                Console.WriteLine($"{enemy.Name} dealt {enemyDamage} damage to you!");
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("An error occurred while the enemy attacked you.");
+            }
 
             Console.WriteLine("Press Enter to continue...");
             Console.ReadLine();
