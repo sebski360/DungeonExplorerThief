@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 class Game
@@ -15,6 +15,19 @@ class Game
 
     public void Start()
     {
+        // Prompt for starting weapon
+        Console.WriteLine("Choose your starting weapon!");
+        Console.WriteLine("1. Knife");
+        Console.WriteLine("2. Longblade");
+        Console.Write("Enter your choice: ");
+        var weaponChoice = Console.ReadLine();
+        if (weaponChoice == "1")
+            player.PickUpItem(new Knife());
+            // player.PickUpItem(new Longblade()); 
+            // Add this to test weapon damage sorting
+        else
+            player.PickUpItem(new Longblade());
+
         Console.WriteLine("Welcome to the heist! Go through each room to the end to grab the money for yourself!");
         int currentRoomIndex = 0;
 
@@ -22,32 +35,29 @@ class Game
         {
             Console.WriteLine("\n--- Choose an Action ---");
             Console.WriteLine("1. Check Stats");
-            Console.WriteLine("2. Proceed to the next room");
-            Console.Write("Enter your choice (or press Enter to proceed to the next room anyway): ");
-            
-            try
+            Console.WriteLine("2. Check Inventory");
+            Console.WriteLine("3. Proceed to the next room");
+            Console.Write("Enter your choice (or press Enter to proceed anyway): ");
+            var choice = Console.ReadLine();
+
+            if (choice == "1")
             {
-                string choice = Console.ReadLine();
-                
-                if (choice == "1")
-                {
-                    player.DisplayStats();
-                    continue; // Stay in menu
-                }
+                player.DisplayStats();
+                continue;
             }
-            catch (Exception ex)
+            if (choice == "2")
             {
-                Console.WriteLine("An error occurred while getting your choice sorted.");
+                player.ShowInventory();
                 continue;
             }
 
-            Room currentRoom = rooms[currentRoomIndex];
-            Console.WriteLine("\n" + currentRoom.GetDescription());
+            var room = rooms[currentRoomIndex];
+            Console.WriteLine("\n" + room.GetDescription());
 
-            if (currentRoom.HasEnemy)
+            if (room.HasEnemy)
             {
-                Enemy enemy = currentRoom.SpawnEnemy();
-                Console.WriteLine($"An enemy appears in front of your way: {enemy.Name}!");
+                var enemy = room.SpawnEnemy();
+                Console.WriteLine($"An enemy appears before you: {enemy.Name}!");
                 Battle(enemy);
                 if (player.Health <= 0)
                 {
@@ -56,24 +66,14 @@ class Game
                 }
             }
 
-            if (currentRoom.HasKey)
-            {
-                Console.WriteLine("You found a mysterious key!");
-                player.PickUpItem("Key");
-            }
+            if (room.HasKey)
+                player.PickUpItem(new Key());
 
-            if (currentRoom.HasHealingItem)
+            if (room.HasHealingItem)
             {
-                try
-                {
-                    int healAmount = random.Next(5, 25);
-                    Console.WriteLine("You found a health potion! Adding health...");
-                    player.Heal(healAmount);
-                }
-                catch (Exception)
-                {
-                    Console.WriteLine("An error occurred with the healing item.");
-                }
+                int healAmt = random.Next(5, 25);
+                Console.WriteLine("You found a health potion! Restoring health...");
+                player.Heal(healAmt);
             }
 
             Console.WriteLine("Press Enter to move to the next room...");
@@ -81,7 +81,9 @@ class Game
             currentRoomIndex++;
         }
 
-        Console.WriteLine(player.Health > 0 ? "Congratulations! You reached the vault and got rich!" : "Game Over.");
+        Console.WriteLine(player.Health > 0
+            ? "Congratulations! You reached the vault and got rich!"
+            : "Game Over.");
     }
 
     private void Battle(Enemy enemy)
@@ -89,54 +91,35 @@ class Game
         while (player.Health > 0 && enemy.Health > 0)
         {
             Console.WriteLine("\n--- Encounter Options ---");
-            Console.WriteLine("1. Lower Attack (More Accurate, Less Damage dealt)");
-            Console.WriteLine("2. Upper Attack (More Damage dealt, Less Accurate)");
+            Console.WriteLine("1. Lower Attack (More Accurate, Less Damage)");
+            Console.WriteLine("2. Upper Attack (More Damage, Less Accurate)");
             Console.WriteLine($"Your Health: {player.Health} // Enemy's Health: {enemy.Health}");
             Console.Write("Choose an attack: ");
-            
-            try
-            {
-                string attackChoice = Console.ReadLine();
+            var atk = Console.ReadLine();
 
-                if (attackChoice == "1" || attackChoice == "2")
-                {
-                    int playerDamage = attackChoice == "1" ? player.LowerAttack() : player.UpperAttack();
-                    enemy.TakeDamage(playerDamage);
-                    Console.WriteLine($"You dealt {playerDamage} damage to {enemy.Name}!");
-                }
-                else
-                {
-                    Console.WriteLine("Invalid input. You flinched, and the enemy will strike you in return.");
-                }
-            }
-            catch (Exception)
+            if (atk == "1" || atk == "2")
             {
-                Console.WriteLine("An error occurred while choosing the attack.");
+                int dmg = atk == "1" ? player.LowerAttack() : player.UpperAttack();
+                enemy.TakeDamage(dmg);
+                Console.WriteLine($"You dealt {dmg} damage to {enemy.Name}!");
+            }
+            else
+            {
+                Console.WriteLine("Invalid input. You flinched and lose your turn.");
             }
 
             if (enemy.Health <= 0) break;
-
             Console.WriteLine("Press Enter to continue...");
             Console.ReadLine();
 
-            try
-            {
-                int enemyDamage = enemy.Attack();
-                player.TakeDamage(enemyDamage);
-                Console.WriteLine($"{enemy.Name} dealt {enemyDamage} damage to you!");
-            }
-            catch (Exception)
-            {
-                Console.WriteLine("An error occurred while the enemy attacked you.");
-            }
-
+            int ed = enemy.Attack();
+            player.TakeDamage(ed);
+            Console.WriteLine($"{enemy.Name} dealt {ed} damage to you!");
             Console.WriteLine("Press Enter to continue...");
             Console.ReadLine();
         }
 
         if (player.Health <= 0)
-        {
             Console.WriteLine("Game Over.");
-        }
     }
 }

@@ -1,23 +1,23 @@
-﻿using System;
+using System;
+using System.Linq;
 
-class Player
+class Player : IDamageable
 {
     public string Name { get; private set; }
     public int Health { get; private set; }
-    private string inventoryItem;
+
+    private Inventory inventory = new Inventory();
     private Random random = new Random();
 
     public Player(string name, int health)
     {
         Name = name;
         Health = health;
-        inventoryItem = null;
     }
 
-    public void PickUpItem(string item)
+    public void PickUpItem(ICollectible item)
     {
-        inventoryItem = item;
-        Console.WriteLine($"You picked up: {item}");
+        inventory.AddItem(item);
     }
 
     public void Heal(int amount)
@@ -31,19 +31,63 @@ class Player
         Console.WriteLine("\n--- Player Stats ---");
         Console.WriteLine($"Name: {Name}");
         Console.WriteLine($"Health: {Health}");
-        Console.WriteLine($"Inventory: {(inventoryItem != null ? inventoryItem : "Empty")}");
+        Console.WriteLine("Inventory Slots:");
+        var items = inventory.Items.ToList();
+        for (int i = 0; i < 3; i++)
+        {
+            Console.WriteLine(i < items.Count
+                ? $"{i + 1}. {items[i].Name}"
+                : $"{i + 1}. Empty");
+        }
     }
 
-// Different Attacks
-// Makes Encounters more interesting and random.
+    public void ShowInventory()
+    {
+        Console.WriteLine("\n--- Inventory Menu ---");
+        var items = inventory.Items.ToList();
+        for (int i = 0; i < 3; i++)
+        {
+            Console.WriteLine(i < items.Count
+                ? $"{i + 1}. {items[i].Name}"
+                : $"{i + 1}. Empty");
+        }
+
+        Console.WriteLine("\nOptions:");
+        Console.WriteLine("F. Filter strongest weapon");
+        Console.WriteLine("S. Sort inventory by name");
+        Console.Write("Enter option (or press Enter to go back): ");
+        var input = Console.ReadLine();
+
+        if (input.Equals("F", StringComparison.OrdinalIgnoreCase))
+        {
+            var w = inventory.GetStrongestWeapon();
+            if (w != null)
+                Console.WriteLine($"Strongest weapon: {w.Name} (+{w.BonusPercent * 100}% attack)");
+            else
+                Console.WriteLine("No weapons in inventory.");
+        }
+        else if (input.Equals("S", StringComparison.OrdinalIgnoreCase))
+        {
+            Console.WriteLine("Inventory sorted by name:");
+            foreach (var item in inventory.SortByName())
+                Console.WriteLine(item.Name);
+        }
+    }
+
     public int LowerAttack()
     {
-        return random.Next(5, 15); // More reliable damage
+        int baseDmg = random.Next(5, 15);
+        var w = inventory.GetStrongestWeapon();
+        if (w != null) baseDmg = (int)(baseDmg * (1 + w.BonusPercent));
+        return baseDmg;
     }
 
     public int UpperAttack()
     {
-        return random.Next(10, 30); // Higher risk damage, High gamble High reward
+        int baseDmg = random.Next(10, 30);
+        var w = inventory.GetStrongestWeapon();
+        if (w != null) baseDmg = (int)(baseDmg * (1 + w.BonusPercent));
+        return baseDmg;
     }
 
     public void TakeDamage(int amount)
