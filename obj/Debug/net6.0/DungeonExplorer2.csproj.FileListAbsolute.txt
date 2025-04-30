@@ -1,0 +1,15 @@
+C:\Users\arekh\OneDrive\Documents\GitHub\DungeonExplorerThief\bin\Debug\net6.0\DungeonExplorer2.exe
+C:\Users\arekh\OneDrive\Documents\GitHub\DungeonExplorerThief\bin\Debug\net6.0\DungeonExplorer2.deps.json
+C:\Users\arekh\OneDrive\Documents\GitHub\DungeonExplorerThief\bin\Debug\net6.0\DungeonExplorer2.runtimeconfig.json
+C:\Users\arekh\OneDrive\Documents\GitHub\DungeonExplorerThief\bin\Debug\net6.0\DungeonExplorer2.dll
+C:\Users\arekh\OneDrive\Documents\GitHub\DungeonExplorerThief\bin\Debug\net6.0\DungeonExplorer2.pdb
+C:\Users\arekh\OneDrive\Documents\GitHub\DungeonExplorerThief\obj\Debug\net6.0\DungeonExplorer2.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\arekh\OneDrive\Documents\GitHub\DungeonExplorerThief\obj\Debug\net6.0\DungeonExplorer2.AssemblyInfoInputs.cache
+C:\Users\arekh\OneDrive\Documents\GitHub\DungeonExplorerThief\obj\Debug\net6.0\DungeonExplorer2.AssemblyInfo.cs
+C:\Users\arekh\OneDrive\Documents\GitHub\DungeonExplorerThief\obj\Debug\net6.0\DungeonExplorer2.csproj.CoreCompileInputs.cache
+C:\Users\arekh\OneDrive\Documents\GitHub\DungeonExplorerThief\obj\Debug\net6.0\DungeonExplorer2.sourcelink.json
+C:\Users\arekh\OneDrive\Documents\GitHub\DungeonExplorerThief\obj\Debug\net6.0\DungeonExplorer2.dll
+C:\Users\arekh\OneDrive\Documents\GitHub\DungeonExplorerThief\obj\Debug\net6.0\refint\DungeonExplorer2.dll
+C:\Users\arekh\OneDrive\Documents\GitHub\DungeonExplorerThief\obj\Debug\net6.0\DungeonExplorer2.pdb
+C:\Users\arekh\OneDrive\Documents\GitHub\DungeonExplorerThief\obj\Debug\net6.0\DungeonExplorer2.genruntimeconfig.cache
+C:\Users\arekh\OneDrive\Documents\GitHub\DungeonExplorerThief\obj\Debug\net6.0\ref\DungeonExplorer2.dll
